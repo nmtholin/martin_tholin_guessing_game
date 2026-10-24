@@ -1,3 +1,5 @@
+import java.util.Scanner;
+
 /**
  * Assignment 1 - Guessing Game
  * <p>
@@ -19,8 +21,6 @@ public class Guesser {
      * and review the section about constructors.
      *
      */
-
-    // Write the constructor below this line.
 
     public Guesser(int low, int high) {
         this.low = low;
@@ -54,11 +54,14 @@ public class Guesser {
      * the player.
      */
     private String getReply() {
-        String reply = null;
-        // Write code here which reads a String from the console.
-        // As long as it is not a valid reply (one of "T" and "F")
-        // write an error message, and read a new reply.
-        // When you have gotten a valid reply, return it.
+        String reply;
+        while (true) {
+            reply = new Scanner(System.in).nextLine();
+            if (reply.equals("T") || reply.equals("F")) {
+                break;
+            }
+            System.out.println("Answer must be T or F. Try again");
+        }
         return reply;
     }
 

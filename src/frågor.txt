@@ -1,0 +1,44 @@
+Fråga: Vad är pull respektive push?
+Svar: pull är att man hämtar och mergear med senaste commits i remote repository. push är att man skickar sina commits till remote repository.
+
+
+Fråga: När använder man log respektive status?
+Svar: log är för att se commit-historiken, medans status är för att se om någit i ens working directory skiljer sig från senaste commit,
+      eller om man har något liggande i staging area.
+
+
+Fråga: Vad är en Git branch och varför är de viktiga?
+Svar: Med en branch kan man bygga vidare på en commit vid sidan av den commiten utan att den ändras. 
+      Är mycket bra om man vill bygga nya features utan att de implementeras i main-branchen innan man väljer att göra det.
+
+
+Fråga: Det finns flera sätt att rulla tillbaka koden till ett tidigare tillstånd. 
+       Förklara skillnaden och motivera när man skulle använda den ena eller andra metoden. 
+       Ge exempel på de kommandon du använder för att göra detta och visa att det fungerar, vilken output du fick från git-kommandona.
+Svar: 
+    restore om man vill ångra lokala ocommitade ändringar utan att påverka commit-historiken.
+    restore --staged för att ta bort filer från staging area.
+    Exempel restore: 
+            Gjorde en ny branch för exempel. La till lite kod i Guesser utan att commita den. 
+            Koden var dålig så behövde återställa till senaste commitade versionen.
+            Med git restore Guesser.java fick jag tillbaka versionen från senaste commit.
+    
+    reset går tillbaka till en tidigare commit och tar bort de commits som kommit därefter ur historiken.
+    Med reset --soft behåller man ändringarna i working directory och staging area.
+    Med reset --mixed (som är default) behåller man ändringarna i working directory men inte i staging area.
+    Med reset --hard behålls inga ändringar.
+    Exempel reset: 
+        Jag kollar i Guesser.java och tänker "den här konstruktorn är väl onödig", tar bort den och commitar snabbt. 
+        Sen märker jag att den såklart behövs för att det ska fungera.
+        Åh nej, pinsamt. Jag använder en git reset --hard HEAD~1 för att gå tillbaka till senaste commit utan ett spår av mitt misstag och låtsas som att det aldrig hände.
+        output blev: "HEAD is now at eefaac5 pre reset-example" och med git log kan man inte se den dumma commit jag gjorde.
+    
+    revert skapar en ny commit från en gammal och gör den till nya HEAD. Den tar inte bort någon commit utan lägger till en över de andra.
+    Exempel revert: 
+        Vill gå tillbaka till en tidigare commit i historiken för jag tycker den var bättre, 
+        men jag vill se till att mina commits som gjordes efter commiten jag vill gå tillbaka till, fortfarande finns med i historiken.
+        Jag kör en git revert HEAD~1 för att få tillbaka den commit som var innan den senaste.
+        Jag får då upp en texteditor där jag blir ombedd att skriva ett commit-meddelande till revert-commiten. Jag acctepterar det som står där med :wq.
+        Output blir sen: [restore-branch ff4f77f] Revert "pre revert-example"
+                        1 file changed, 1 insertion(+), 1 deletion(-)
+        Med git log kan jag se att allt finns kvar i historiken.
